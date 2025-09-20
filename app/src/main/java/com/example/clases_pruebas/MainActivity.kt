@@ -89,21 +89,18 @@ fun DosTextosVerticalesPreview (){
     }
 
     @Composable
-    fun EjemploBox() {
+    fun EjemploBox() { // el error esta en que hay que ponerlo entre llaves
         Box(
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(40.dp)
-        )
-        Text("Parte Superior Izquierda", modifier = Modifier.align(Alignment.TopStart))
-        Text("Parte Central", modifier = Modifier.align(Alignment.Center))
-        Text("Parte Inferior Derecha", modifier = Modifier.align(Alignment.BottomEnd))
-
+        ) {
+            Text("Parte Superior Izquierda", modifier = Modifier.align(Alignment.TopStart))
+            Text("Parte Central", modifier = Modifier.align(Alignment.Center))
+            Text("Parte Inferior Derecha", modifier = Modifier.align(Alignment.BottomEnd))
+            }
     }
 
-    fun Modifier.Companion.align(topStart: Alignment): Modifier {
-        TODO("Not yet implemented")
-    }
 
 
     @Composable
