@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color //libreria de colores <--- usar esta de preferencia
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
@@ -46,7 +47,8 @@ class MainActivity : ComponentActivity() { //main
         setContent {
             //DosTextosVerticalesEjercicio()
             //EjemploBox()
-            ImagenConTexto() //llamada del método
+            //ImagenConTexto() //llamada del método
+            imagenConZoom()
         }
     }
 //}
@@ -150,7 +152,7 @@ fun DosTextosVerticalesPreview (){
                 painter = painterResource(id = R.drawable.miamor), //para identificar la imagen
                 //que se pone en proyecto/app/src/main/res/drawable
                 contentDescription = ("gato alien :3"),
-                modifier = Modifier.align(Alignment.CenterStart).fillMaxSize().offset{IntOffset(textPosition.x.toInt(), textPosition.y.toInt())}.pointerInput(Unit) {
+                modifier = Modifier.align(Alignment.CenterStart).fillMaxSize().offset{IntOffset(imagePosition.x.toInt(), imagePosition.y.toInt())}.pointerInput(Unit) {
                     detectDragGestures { change, dragAmount ->
                         change.consume()
                         textPosition += Offset(dragAmount.x, dragAmount.y)
@@ -159,9 +161,9 @@ fun DosTextosVerticalesPreview (){
             )
 
             Text(
-                text = ("happy"),
+                text = ("love you :D"),
                 fontSize = 22.sp,
-                color = Color.Green,
+                color = Color.Yellow,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.offset{IntOffset(textPosition.x.toInt(), textPosition.y.toInt())}.pointerInput(Unit) {
                     detectDragGestures { change, dragAmount ->
@@ -190,13 +192,31 @@ fun DosTextosVerticalesPreview (){
 
     @Composable
     fun imagenConZoom(){
-        var escalaZoom by remember {mutableStateOf(1f)}
+        var escalaImagen by remember {mutableStateOf(1f)}
         var posicionImagen by remember { mutableStateOf(Offset(0f,0f)) }
+        var anguloRotacion by remember {mutableStateOf(0f)}
 
         Box(
             modifier = Modifier.fillMaxSize().pointerInput(Unit){ //<-- esto es para eventos
-                detectTransformGestures { _ ,desplazamiento, zoom, _ -> }
+                detectTransformGestures { _ ,desplazamiento, zoom, rotacion ->
+                    escalaImagen *= zoom
+                    posicionImagen += desplazamiento
+                    anguloRotacion += rotacion
+
+                }
             }
+        )
+
+        Image (
+            painter = painterResource(id = R.drawable.miamor),
+            contentDescription = "Bachira Meguru",
+            modifier = Modifier.graphicsLayer(
+                scaleX = escalaImagen.coerceIn(0.5f, 3f),
+                scaleY = escalaImagen.coerceIn(0.5f, 3f),
+                translationX = posicionImagen.x,
+                translationY = posicionImagen.y,
+                rotationZ = anguloRotacion
+            )
         )
     }
 
